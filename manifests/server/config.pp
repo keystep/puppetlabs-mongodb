@@ -249,17 +249,4 @@ class mongodb::server::config {
     }
   }
 
-  if $auth and $store_creds {
-    file { $rcfile:
-      ensure  => present,
-      content => template('mongodb/mongorc.js.erb'),
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0600',
-    }
-  } else {
-    file { $rcfile:
-      ensure => absent,
-    }
-  }
 }

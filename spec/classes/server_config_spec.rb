@@ -29,12 +29,11 @@ describe 'mongodb::server::config', :type => :class do
       is_expected.to contain_file('/etc/mongod.conf').with_content(/^logpath=\/var\/log\/mongo\/mongod\.log/)
       is_expected.to contain_file('/etc/mongod.conf').with_content(/^fork=true/)
 
-      is_expected.to contain_file('/root/.mongorc.js').with({ :ensure => 'absent' })
     }
   end
 
   describe 'with absent ensure' do
-    let(:pre_condition) { "class { 'mongodb::server': config => '/etc/mongod.conf', dbpath => '/var/lib/mongo', rcfile => '/root/.mongorc.js', ensure => absent }" }
+    let(:pre_condition) { "class { 'mongodb::server': config => '/etc/mongod.conf', dbpath => '/var/lib/mongo', ensure => absent }" }
 
     it {
       is_expected.to contain_file('/etc/mongod.conf').with({ :ensure => 'absent' })
@@ -143,10 +142,6 @@ describe 'mongodb::server::config', :type => :class do
     context 'false' do
       let(:pre_condition) { "class { 'mongodb::server': config => '/etc/mongod.conf', dbpath => '/var/lib/mongo', rcfile => '/root/.mongorc.js', ensure => present, store_creds => false  }" }
 
-      it {
-        is_expected.to contain_file('/root/.mongorc.js').with_ensure('absent')
-      }
-    end
   end
 
   describe 'with custom pidfilemode' do

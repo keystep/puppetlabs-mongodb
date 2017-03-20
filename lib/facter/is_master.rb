@@ -30,14 +30,15 @@ Facter.add('mongodb_is_master') do
           mongoPort = "--port #{config['port']}"
         end
       end
-      e = File.exists?('/root/.mongorc.js') ? 'load(\'/root/.mongorc.js\'); ' : ''
-
+#      e = File.exists?('/root/.mongorc.js') ? 'load(\'/root/.mongorc.js\'); ' : ''
+      e = ''
       # Check if the mongodb server is responding:
       Facter::Core::Execution.exec("mongo --quiet #{mongoPort} --eval \"#{e}printjson(db.adminCommand({ ping: 1 }))\"")
 
       if $?.success?
         mongo_output = Facter::Core::Execution.exec("mongo --quiet #{mongoPort} --eval \"#{e}printjson(db.isMaster())\"")
-        JSON.parse(mongo_output.gsub(/ISODate\((.+?)\)/, '\1 '))['ismaster'] ||= false
+        #JSON.parse(mongo_output.gsub(/ISODate\((.+?)\)/, '\1 '))['ismaster'] ||= false
+        JSON.parse(mongo_output.gsub(/ISODate\((.+?)\)/, '\1 ').gsub(/ObjectId\(([^)]*)\)/, '\1'))['ismaster'] ||= false
       else
         'not_responding'
       end
